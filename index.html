@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>ArcGIS API for JavaScript Tutorials: Display a map</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    
+       
+    <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.24/"></script>
+    
+    <script>
+      
+      require(["esri/config","esri/Map", "esri/views/MapView", "esri/widgets/BasemapToggle", "esri/widgets/BasemapGallery", "esri/layers/FeatureLayer", "esri/views/SceneView"], function (esriConfig,Map, MapView, BasemapToggle, BasemapGallery, FeatureLayer, SceneView) {
+
+        esriConfig.apiKey = "your api key here";
+        
+        const map = new Map({
+          basemap: "arcgis-topographic" // Basemap layer service
+         // ground: 'world-elevation',
+        });
+        
+        const view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          camera: {
+            position: {
+              x: -117.195, //Longitude
+              y: 34.056, //Latitude
+              z: 1000 //Meters
+            },
+            tilt: 75
+            //position: 90
+          }
+          });
+        
+ 
+    
+        const basemapToggle = new BasemapToggle({
+          view: view,
+          nextBasemap: "arcgis-imagery"
+       });
+
+        view.ui.add(basemapToggle,"bottom-right");
+
+        const basemapGallery = new BasemapGallery({
+          view: view,
+          source: {
+            query: {
+              title: '"World Basemaps for Developers" AND owner:esri'
+            }
+          }
+        });
+
+        view.ui.add(basemapGallery, "top-right"); // Add to the view
+        
+        
+                
+        
+        // Parks and open spaces (polygons)
+          const parksLayer = new FeatureLayer({
+            url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0"
+          });
+
+          map.add(parksLayer, 0);
+        
+        
+      });
+      
+      
+      
+      
+    </script>
+        
+
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
